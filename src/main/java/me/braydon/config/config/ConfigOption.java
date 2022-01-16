@@ -11,5 +11,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ConfigOption {
+    /**
+     * The path of this config option.
+     *
+     * @return the path
+     */
     String path();
 }

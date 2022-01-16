@@ -13,6 +13,19 @@ public final class Config {
     @ConfigOption(path = "join-message")
     public static String JOIN_MESSAGE = "Hello, %s!";
 
+    /**
+     * Initialize the config by iterating over the fields
+     * of the class that are annotated with @ConfigOption
+     * and setting them to the values in the config file.
+     * <p>
+     * If the config value is null, the value of the
+     * field will be used as the default value
+     * </p>
+     *
+     * @param plugin the plugin owner of the config
+     * @throws IllegalAccessException if the field is not accessible
+     * @see ConfigOption for config option
+     */
     public static void initialize(@NonNull ConfigReflection plugin) throws IllegalAccessException {
         FileConfiguration config = plugin.getConfig();
 
