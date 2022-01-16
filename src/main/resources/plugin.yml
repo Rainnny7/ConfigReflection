@@ -1,0 +1,4 @@
+name: ConfigReflection
+main: me.braydon.config.ConfigReflection
+version: ${git.commit.id.abbrev}
+author: Braydon (Rainnny)
