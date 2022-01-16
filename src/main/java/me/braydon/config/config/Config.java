@@ -11,10 +11,13 @@ import java.lang.reflect.Field;
  */
 public final class Config {
     @ConfigOption(path = "join-message")
-    public static final String JOIN_MESSAGE = "Hello, %s!";
+    public static String JOIN_MESSAGE = "Hello, %s!";
 
     public static void initialize(@NonNull ConfigReflection plugin) throws IllegalAccessException {
         FileConfiguration config = plugin.getConfig();
+
+        int loaded = 0;
+        boolean dirty = false;
         for (Field field : Config.class.getDeclaredFields()) {
             if (!field.isAnnotationPresent(ConfigOption.class)) { // If the field is not annotated with @ConfigOption, skip it
                 continue;
@@ -24,9 +27,17 @@ public final class Config {
             String path = option.path(); // The path of the config option
             Object value = config.get(path); // The value of the config option in the config file
             if (value == null) { // If the value from the config is null, use the default value
+                plugin.getLogger().warning(String.format("Config value for %s was null, using the default value of %s", path, defaultValue));
+                config.set(path, defaultValue); // Set the config value to the default value
                 value = defaultValue;
+                dirty = true; // Mark the config as dirty so it will be saved
             }
             field.set(null, value); // Set the field value to the config value
+            loaded++; // Increment the loaded config option count
         }
+        if (dirty) { // If the config is dirty, save it
+            plugin.saveConfig();
+        }
+        plugin.getLogger().info(String.format("%s config value(s) were loaded", loaded));
     }
 }
